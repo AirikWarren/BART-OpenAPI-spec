@@ -1,0 +1,369 @@
+penapi: '3.0.2'
+
+info:
+  title: BART
+  version: '1.0'
+
+servers:
+  - url: http://api.bart.gov/api
+
+components:
+  
+  securitySchemes:
+    key:
+      description: 
+        A public key that is refreshed every so often can be found <a href=https://www.bart.gov/schedules/developers/api>here</a>
+      type: apiKey
+      in: query
+      name: key
+  
+  parameters:
+    use_json:
+      description: tells the server to give us json instead of xml
+      in: query
+      name: json
+      required: true
+      schema:
+        type: string
+        enum:
+          - y
+    orig:
+      description: origin station abbreviation
+      name: orig
+      in: query
+      schema:
+        type: string
+        enum: [
+                "12TH",
+                "16TH",
+                "19TH",
+                "24TH",
+                "ANTC",
+                "ASHB",
+                "BALB",
+                "BAYF",
+                "BERY",
+                "CAST",
+                "CIVC",
+                "COLS",
+                "COLM",
+                "CONC",
+                "DALY",
+                "DBRK",
+                "DUBL",
+                "DELN",
+                "PLZA",
+                "EMBR",
+                "FRMT",
+                "FTVL",
+                "GLEN",
+                "HAYW",
+                "LAFY",
+                "LAKE",
+                "MCAR",
+                "MLBR",
+                "MLPT",
+                "MONT",
+                "NBRK",
+                "NCON",
+                "OAKL",
+                "ORIN",
+                "PITT",
+                "PCTR",
+                "PHIL",
+                "POWL",
+                "RICH",
+                "ROCK",
+                "SBRN",
+                "SFIA",
+                "SANL",
+                "SHAY",
+                "SSAN",
+                "UCTY",
+                "WCRK",
+                "WARM",
+                "WDUB",
+                "WOAK"
+            ]
+    dest:
+      description: destination station abbreviation
+      name: dest
+      in: query
+      schema:
+        type: string
+        enum: [
+                "12TH",
+                "16TH",
+                "19TH",
+                "24TH",
+                "ANTC",
+                "ASHB",
+                "BALB",
+                "BAYF",
+                "BERY",
+                "CAST",
+                "CIVC",
+                "COLS",
+                "COLM",
+                "CONC",
+                "DALY",
+                "DBRK",
+                "DUBL",
+                "DELN",
+                "PLZA",
+                "EMBR",
+                "FRMT",
+                "FTVL",
+                "GLEN",
+                "HAYW",
+                "LAFY",
+                "LAKE",
+                "MCAR",
+                "MLBR",
+                "MLPT",
+                "MONT",
+                "NBRK",
+                "NCON",
+                "OAKL",
+                "ORIN",
+                "PITT",
+                "PCTR",
+                "PHIL",
+                "POWL",
+                "RICH",
+                "ROCK",
+                "SBRN",
+                "SFIA",
+                "SANL",
+                "SHAY",
+                "SSAN",
+                "UCTY",
+                "WCRK",
+                "WARM",
+                "WDUB",
+                "WOAK"
+            ]
+    date:
+      description: date in MM/DD/YYYY format
+      in: query
+      name: date
+      required: false
+      schema:
+        type: string
+        pattern: '^(0[1-9]|1[012])[\/](0[1-9]|[12][0-9]|3[01])[\/](19|20)\d\d$'
+
+security:
+  - key: [MW9S-E7SL-26DU-VV8V]
+
+paths:
+
+  /stn.aspx:
+    get:
+      summary: Station Information API
+      description:
+        <table class="reference" width="100%" cellspacing="0" cellpadding="0" border="1">
+          <tbody><tr>
+            <th width="15%" valign="top" align="left">Command</th>
+            <th width="85%" valign="top" align="left">Description</th>
+          </tr>  
+          <tr>
+            <td valign="top"><strong>help</strong></a></td>
+            <td valign="top">Requests detailed information regarding a specific route.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>stninfo</strong> {requires orig}</a></td>
+            <td valign="top">Provides a detailed information about the specified station.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>stnaccess</strong> {requires orig}</a></td>
+            <td valign="top">Requests detailed information how to access the specified station as well as information about the neighborhood around the station.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>stns</strong></a></td>
+            <td valign="top">Provides a list of all available stations.</td>
+          </tr>
+        </tbody></table>
+      parameters:
+        - $ref: '#/components/parameters/use_json'
+        - $ref: '#/components/parameters/orig'
+        - in: query
+          description: see http://api.bart.gov/docs/stn/ if any abbreviation doesn't seem obvious
+          name: cmd
+          required: true
+          schema:
+            type: string
+            enum: [help, stninfo, stnaccess, stns]
+      responses:
+        '200':
+          description: OK
+
+  /bsa.aspx:
+    get:
+      summary: Advisory Information API
+      description:
+         <table class="reference" width="100%" cellspacing="0" cellpadding="0" border="1">
+          <tbody><tr>
+            <th width="15%" valign="top" align="left">Command</th>
+            <th width="85%" valign="top" align="left">Description</th>
+          </tr>  
+          <tr>
+            <td valign="top"><strong>bsa</strong></a></td>
+            <td valign="top">Requests current advisory information.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>count</strong></a></td>
+            <td valign="top">Request the number of trains currently active in the system.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>elev</strong></a></td>
+            <td valign="top">Requests current elevator status information.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>help</strong></a></td>
+            <td valign="top">Provides a summary of the commands available through the BSA API.</td>
+          </tr>
+
+          </tbody></table>
+      parameters:
+        - $ref: '#/components/parameters/use_json'
+        - in: query
+          name: cmd
+          required: true
+          schema:
+            type: string
+            enum: [help, bsa, count, elev]
+
+      responses:
+        '200':
+          description: OK
+
+  /etd.aspx:
+    get: 
+      description:
+        <table class="reference" width="100%" cellspacing="0" cellpadding="0" border="1">
+          <tbody><tr>
+            <th width="15%" valign="top" align="left">Command</th>
+            <th width="85%" valign="top" align="left">Description</th>
+          </tr>  
+          <tr>
+            <td valign="top"><strong>etd</strong></a></td>
+            <td valign="top">Requests estimated departure time for specified station.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>help</strong></a></td>
+            <td valign="top">Provides a summary of the commands available through the BSA API.</td>
+          </tr>
+
+            </tbody></table> 
+      summary: Real-Time Information API
+      parameters:
+        - $ref: '#/components/parameters/use_json'      
+        - $ref: '#/components/parameters/orig'
+        - in: query
+          name: cmd
+          required: true
+          schema:
+            type: string
+            enum: [help, etd]      
+        - in: query
+          name: plat
+          required: false
+          description: 
+            This will limit results to a specific platform. Valid platforms depend on the station, but can range from 1-4.
+          schema:
+            type: integer
+            enum: [1,2,3,4]
+        - in: query
+          name: dir 
+          required: false
+          description: 
+            This will limit results to a specific direction. Valid directions are 'n' for Northbound and 's' for Southbound.
+          schema:
+            type: string
+            enum: [n, s]
+      responses:
+        '200':
+          description: OK
+          
+  /route.aspx:
+    get:
+      summary: Route Information API
+      parameters:
+        - $ref: '#/components/parameters/use_json'
+        - $ref: '#/components/parameters/date'
+        - in: query
+          description: 
+             Specifies the specific route information to return. In addition to route number (i.e. 1, 2, ... 12) 'all' can be specified to get the configuration information for all routes. 
+          name: route 
+          required: false
+          schema:
+            type: string      
+        - in: query
+          name: cmd
+          required: true
+          schema:
+            type: string
+            enum: [help, routeinfo, routes]
+      responses:
+        '200':
+          description: OK
+
+  /sched.aspx:
+    get:
+      summary: Schedule Information API
+      description: 
+        <table class="reference" width="100%" cellspacing="0" cellpadding="0" border="1">
+          <tbody><tr>
+            <th width="15%" valign="top" align="left">Command</th>
+            <th width="85%" valign="top" align="left">Description</th>
+          </tr>  
+          <tr>
+            <td valign="top"><strong>arrive</strong></a></td>
+            <td valign="top">Requests a trip plan based on arriving by the specified time.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>depart</strong></a></td>
+            <td valign="top">Requests a trip plan based on departing by the specified time.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>fare</strong></a></td>
+            <td valign="top">Requests fare information for a trip between two stations.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>help</strong></a></td>
+            <td valign="top">Provides a summary of the commands available through the Route Information API.</td>
+          </tr>
+            <td valign="top"><strong>routesched</strong></a></td>
+            <td valign="top">Requests a full schedule for the specified route.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>special</strong></a></td>
+            <td valign="top">Requests information about all special schedule notices in effect.</td>
+          </tr>
+          <tr>
+            <td valign="top"><strong>stnsched</strong></a></td>
+            <td valign="top">Requests an entire daily schedule for the particular station specified.</td>
+          </tr>
+
+       </tbody></table>
+      parameters:
+        - $ref: '#/components/parameters/use_json'
+        - $ref: '#/components/parameters/orig'
+        - $ref: '#/components/parameters/dest'
+        - $ref: '#/components/parameters/date'
+        - in: query
+          name: cmd
+          required: true
+          schema:
+            type: string
+            enum: [help, depart, fare, routesched, stnsched, speical]
+        - in: query
+          name: route
+          description: Specifies the specific route information to return. In addition to route number (i.e. 1, 2, ... 12) 
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+  
